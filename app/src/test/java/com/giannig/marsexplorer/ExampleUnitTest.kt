@@ -1,4 +1,4 @@
-package com.example.marsexplorer
+package com.giannig.marsexplorer
 
 import org.junit.Test
 

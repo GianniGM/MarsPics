@@ -1,4 +1,4 @@
-package com.example.marsexplorer.api.roverDto
+package com.giannig.marsexplorer.api.roverDto
 
 
 import androidx.annotation.Keep

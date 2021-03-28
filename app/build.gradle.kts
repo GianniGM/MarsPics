@@ -8,7 +8,7 @@ android {
     buildToolsVersion = "30.0.3"
 
     defaultConfig {
-        applicationId = "com.example.marsexplorer"
+        applicationId = "com.giannig.marsexplorer"
         minSdk = 23
         targetSdk = 30
         versionCode = 1
@@ -20,7 +20,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -53,17 +56,20 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.3.0-alpha02")
 
     //retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.6.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.5.0")
+
 
     //ok http
-
     // * define a BOM and its version
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
-
     // * define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
+
+    //Moshi
+    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
 
     //timber
     implementation("com.jakewharton.timber:timber:4.7.1")

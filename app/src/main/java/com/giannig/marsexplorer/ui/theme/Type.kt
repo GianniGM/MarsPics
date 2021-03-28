@@ -1,4 +1,4 @@
-package com.example.marsexplorer.ui.theme
+package com.giannig.marsexplorer.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
