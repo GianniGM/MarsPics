@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha06")
     implementation("androidx.activity:activity-compose:1.3.0-alpha02")
 
+
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
@@ -73,6 +74,9 @@ dependencies {
 
     //timber
     implementation("com.jakewharton.timber:timber:4.7.1")
+
+    //Glide
+    implementation("com.google.accompanist:accompanist-glide:0.7.0")
 
     //test core android
     testImplementation("junit:junit:4.+")

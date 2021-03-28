@@ -4,6 +4,6 @@ package com.giannig.marsexplorer.api.roverDto
 import androidx.annotation.Keep
 
 @Keep
-data class MarsRoverDto(
+data class MarsRoverImagesDto(
     val photos: List<PhotoDto> = listOf()
 )
