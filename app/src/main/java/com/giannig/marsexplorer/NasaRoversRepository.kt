@@ -14,15 +14,13 @@ class NasaRoversRepository {
         emit(getRoversFromApi())
     }.catch {
         emit(RoversImagesData.Error("unable to fetch Mars Pictures"))
-    }.onStart {
-        emit(RoversImagesData.Loading)
     }
 
     private suspend fun getRoversFromApi(): RoversImagesData = NasaNetworkService
         .getMarsRoverImages()
         .run {
             return if (photos.isEmpty()) {
-                RoversImagesData.EmptyData
+                RoversImagesData.NoData
             } else {
                 RoversImagesData.ShowImage(photos)
             }
@@ -30,8 +28,7 @@ class NasaRoversRepository {
 }
 
 sealed class RoversImagesData {
-    object Loading : RoversImagesData()
-    data class ShowImage(val roversImages: List<PhotoDto>) : RoversImagesData()
-    object EmptyData : RoversImagesData()
+    data class ShowImage(val roversImageList: List<PhotoDto>) : RoversImagesData()
+    object NoData : RoversImagesData()
     data class Error(val errorMessage: String) : RoversImagesData()
 }

@@ -55,6 +55,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha06")
     implementation("androidx.activity:activity-compose:1.3.0-alpha02")
 
+    //compose+livedata
+    implementation ("androidx.compose.runtime:runtime-livedata:${rootProject.extra["compose_version"]}")
 
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
