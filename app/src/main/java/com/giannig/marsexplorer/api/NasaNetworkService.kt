@@ -29,7 +29,7 @@ object NasaNetworkService{
         .create(NasaApi::class.java)
 
     // TODO: 28.03.21  
-    suspend fun getMarsRoverImages() = retrofit.getMarsRoversImage("curiosity")
+    suspend fun getMarsRoverImagesFrom(rovers: SpaceRovers) = retrofit.getMarsRoversImage(rovers.roverName())
 
     // TODO: 28.03.21  
     suspend fun getMarsWeatherFromElysium() = retrofit

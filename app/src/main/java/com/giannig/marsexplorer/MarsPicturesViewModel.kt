@@ -1,8 +1,11 @@
 package com.giannig.marsexplorer
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
-import com.giannig.marsexplorer.api.roverDto.MarsRoverImagesDto
-import com.giannig.marsexplorer.api.roverDto.PhotoDto
+import com.giannig.marsexplorer.RoversImagesData.*
+import com.giannig.marsexplorer.api.SpaceRovers
+import com.giannig.marsexplorer.api.SpaceRovers.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -12,18 +15,18 @@ class MarsPicturesViewModel(
     private val nasaRoversRepository: NasaRoversRepository,
 ) : ViewModel() {
 
-    private val mutableRoverImagesLiveData = MutableLiveData<RoversImagesData>()
+    val mutableRoverState: MutableState<RoversImagesData> = mutableStateOf(Loading)
     private var loadImagesJob: Job? = null
 
-    val roverImagesLiveData: LiveData<RoversImagesData> = mutableRoverImagesLiveData
-
     // TODO: 28.03.21
-    fun getRoverImages() {
+    fun getPicturesFrom(rover: SpaceRovers) {
         loadImagesJob.cancelIfActive()
         loadImagesJob = viewModelScope.launch {
-            nasaRoversRepository.getRovers().collect {
-                mutableRoverImagesLiveData.value = it
-            }
+            nasaRoversRepository
+                .loadPicturesFromApi(rover)
+                .collect {
+                    mutableRoverState.value = it
+                }
         }
     }
 
