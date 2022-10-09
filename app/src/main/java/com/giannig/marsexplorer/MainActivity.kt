@@ -3,22 +3,25 @@ package com.giannig.marsexplorer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.giannig.marsexplorer.api.SpaceRovers
-import com.giannig.marsexplorer.api.SpaceRovers.*
+import coil.compose.AsyncImage
+import com.giannig.marsexplorer.api.SpaceRover
+import com.giannig.marsexplorer.api.roverDto.PhotoDto
+import com.giannig.marsexplorer.mocks.generatePhotoList
 import com.giannig.marsexplorer.ui.theme.MarsExplorerTheme
-import com.google.accompanist.glide.GlideImage
 
 class MainActivity : ComponentActivity() {
 
@@ -28,7 +31,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getPicturesFrom(CURIOSITY)
+        viewModel.getPicturesFrom(selectedRover)
+
         setContent {
             val roverImages = viewModel.mutableRoverState.value
             MarsExplorerTheme {
@@ -38,6 +42,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    //temporary approac need to implement a filter
+    companion object{
+        val selectedRover = SpaceRover.PERSEVERANCE
     }
 
 }
@@ -50,12 +59,63 @@ fun DefaultPreview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ViewWithFewImages() {
+    val listOfPhotos = generatePhotoList(2)
+    val roverName = "Banana"
+    MarsExplorerTheme {
+        MainPage(
+            roversImagesData = RoversImagesData.ShowImage(listOfPhotos, roverName),
+        )
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ViewWithLotOfImages() {
+    val listOfPhotos = generatePhotoList(12)
+    val roverName = "Banana"
+    MarsExplorerTheme {
+        MainPage(
+            roversImagesData = RoversImagesData.ShowImage(listOfPhotos, roverName),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ViewEmpty() {
+    val listOfPhotos = emptyList<PhotoDto>()
+    val roverName = "Banana"
+    MarsExplorerTheme {
+        MainPage(
+            roversImagesData = RoversImagesData.ShowImage(listOfPhotos, roverName),
+        )
+    }
+}
+
+
+@Preview(showBackground = false)
+@Composable
+fun ListItem() {
+    val urlString = "https://www.nasa.gov/sites/default/files/styles/image_card_4x3_ratio/public/thumbnails/image/pia24269-3-16.jpg"
+    val urlName = "Mars is nice"
+    MarsSingleItem(
+        urlString,
+        urlName,
+    )
+}
+
+
 @Composable
 fun MainPage(roversImagesData: RoversImagesData) {
+    val rover = MainActivity.selectedRover
     Column {
         TopAppBar(
             title = {
-                Text(text = "Pictures from ${CURIOSITY.roverName()}")
+                Text(text = "Pictures from ${rover.roverName()}")
             },
         )
         MarsPictures(roversImagesData)
@@ -67,22 +127,23 @@ fun MainPage(roversImagesData: RoversImagesData) {
 private fun MarsPictures(roversImagesData: RoversImagesData) = when (roversImagesData) {
     RoversImagesData.EmptyData -> Text(text = "No Objects here", color = Color.White)
     is RoversImagesData.Error -> Text(text = roversImagesData.errorMessage, color = Color.Blue)
-    RoversImagesData.Loading -> setUpLoadingView()
+    RoversImagesData.Loading -> SetUpLoadingView()
     is RoversImagesData.ShowImage -> RoverImagesList(roversImagesData)
 }
 
 @Composable
-private fun setUpLoadingView() {
+private fun SetUpLoadingView() {
     Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        //todo: nice to have a better view of the circular progress indicator
         CircularProgressIndicator(
-            color = Color.LightGray,
-            modifier = Modifier.padding(16.dp)
+            color = Color.Blue,
+            modifier = Modifier.padding(23.dp)
         )
     }
 }
@@ -90,31 +151,36 @@ private fun setUpLoadingView() {
 @Composable
 fun RoverImagesList(roversImagesData: RoversImagesData.ShowImage) {
     LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        roversImagesData.roversImages.forEach {
+        roversImagesData.roversImages.forEach { photoDto ->
             item {
-                GlideImage(
-                    data = it.img_src,
-                    contentDescription = it.earth_date,
-                    loading = {
-                        setUpLoadingView()
-                    },
-                    error = {
-                        Image(
-                            painter = painterResource(R.drawable.banana),
-                            contentDescription = null
-                        )
-                    }
-                )
+                MarsSingleItem(photoDto.img_src, photoDto.earth_date)
             }
         }
     }
 }
+
+@Composable
+fun MarsSingleItem(imageSource: String, earthDate: String) {
+    val shape = AbsoluteRoundedCornerShape(16.dp)
+    AsyncImage(
+        placeholder = painterResource(id = R.drawable.mars),
+        model = imageSource,
+        contentDescription = earthDate,
+        modifier = Modifier
+            .padding(24.dp, 16.dp)
+            .border(1.dp, Color.Black, shape)
+            .border(2.dp, Color.Yellow, shape)
+            .border(3.dp, Color.Black, shape)
+            .clip(shape),
+    )
+}
+
 
 
 

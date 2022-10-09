@@ -6,8 +6,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 
-// TODO: 28.03.21  
 object NasaNetworkService{
    
     private fun getClient(): OkHttpClient {
@@ -28,21 +28,16 @@ object NasaNetworkService{
         .build()
         .create(NasaApi::class.java)
 
-    // TODO: 28.03.21  
-    suspend fun getMarsRoverImagesFrom(rovers: SpaceRovers) = retrofit.getMarsRoversImage(rovers.roverName())
-
-    // TODO: 28.03.21  
-    suspend fun getMarsWeatherFromElysium() = retrofit
-        .getMarsWeather()
+    suspend fun getMarsRoverImagesFrom(rovers: SpaceRover) = retrofit.getMarsRoversImage(rovers.roverName())
 }
 
-enum class SpaceRovers {
+enum class SpaceRover {
     CURIOSITY,
     OPPORTUNITY,
     SPIRIT,
     PERSEVERANCE;
     
     fun roverName(): String {
-        return this.name.toLowerCase()
+        return this.name.toLowerCase(Locale.ROOT)
     }
 }

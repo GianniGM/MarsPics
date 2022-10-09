@@ -1,18 +1,16 @@
 package com.giannig.marsexplorer
 
 import com.giannig.marsexplorer.api.NasaNetworkService
-import com.giannig.marsexplorer.api.SpaceRovers
-import com.giannig.marsexplorer.api.SpaceRovers.*
+import com.giannig.marsexplorer.api.SpaceRover
+import com.giannig.marsexplorer.api.SpaceRover.*
 import com.giannig.marsexplorer.api.roverDto.PhotoDto
 import kotlinx.coroutines.flow.*
 
-// TODO: 28.03.21
 class NasaRoversRepository {
 
     // https://proandroiddev.com/using-coroutines-and-flow-with-mvvm-architecture-796142dbfc2f
 
-    // TODO: 28.03.21 persistency in db
-    fun loadPicturesFromApi(rovers: SpaceRovers): Flow<RoversImagesData> = flow {
+    fun loadPicturesFromApi(rovers: SpaceRover): Flow<RoversImagesData> = flow {
         emit(getPicturesFromRoverApi(rovers))
     }.catch {
         emit(RoversImagesData.Error("unable to fetch Mars Pictures"))
@@ -20,9 +18,9 @@ class NasaRoversRepository {
         emit(RoversImagesData.Loading)
     }
 
-    private suspend fun getPicturesFromRoverApi(rovers: SpaceRovers): RoversImagesData =
+    private suspend fun getPicturesFromRoverApi(rovers: SpaceRover): RoversImagesData =
         NasaNetworkService
-            .getMarsRoverImagesFrom(CURIOSITY)
+            .getMarsRoverImagesFrom(PERSEVERANCE)
             .run {
                 return if (photos.isEmpty()) {
                     RoversImagesData.EmptyData

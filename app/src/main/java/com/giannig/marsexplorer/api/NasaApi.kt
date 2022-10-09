@@ -1,6 +1,7 @@
 package com.giannig.marsexplorer.api
 
 import com.giannig.marsexplorer.api.roverDto.MarsRoverImagesDto
+import com.giannig.marsexplorer.api.weatherDto.API_KEY
 import com.giannig.marsexplorer.api.weatherDto.WeatherDto
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -10,10 +11,8 @@ import retrofit2.http.Query
 const val MARS_WEATHER_ELYSIUM = "https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0"
 const val MARS_ROVERS_API = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY"
 
-// TODO: 28.03.21  
 interface NasaApi {
 
-    // TODO: 28.03.21  
     @GET("mars-photos/api/v1/rovers/{roverName}/photos")
     suspend fun getMarsRoversImage(
         @Path("roverName") roverName: String,
@@ -21,7 +20,6 @@ interface NasaApi {
         @Query("api_key") apiKey: String = API_KEY
     ) : MarsRoverImagesDto
 
-    // TODO: 28.03.21  
     @GET("insight_weather")
     suspend fun getMarsWeather(
         @Query("api_key") apiKey: String = API_KEY,
@@ -30,9 +28,6 @@ interface NasaApi {
     ): WeatherDto
 
     companion object {
-
-        // TODO: 28.03.21
-
         const val BASE_URL = "https://api.nasa.gov/"
     }
 }

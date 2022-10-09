@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
 class ViewModelFactory : ViewModelProvider.Factory{
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(MarsPicturesViewModel::class.java)){
             return MarsPicturesViewModel(NasaRoversRepository()) as T
         }

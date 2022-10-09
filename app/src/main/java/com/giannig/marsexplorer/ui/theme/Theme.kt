@@ -7,9 +7,8 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// TODO: 17.04.21 change all the theming
 private val DarkColorPalette = darkColors(
-        primary = Color.Black, //todo move to a variable
+        primary = Color.Black,
         primaryVariant = Color.Black,
         secondary = Teal200
 )
